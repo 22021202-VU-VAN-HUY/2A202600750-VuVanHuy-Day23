@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sqlite3
 from typing import Any
 
 
@@ -23,10 +24,14 @@ def build_checkpointer(kind: str = "memory", database_url: str | None = None) ->
 
         return MemorySaver()
     if kind == "sqlite":
-        raise NotImplementedError(
-            "TODO(student): implement SQLite checkpointer. "
-            "Hint: pip install langgraph-checkpoint-sqlite, then use SqliteSaver"
-        )
+        from langgraph.checkpoint.sqlite import SqliteSaver
+
+        db_path = database_url or "checkpoints.db"
+        conn = sqlite3.connect(db_path, check_same_thread=False)
+        conn.execute("PRAGMA journal_mode=WAL")
+        saver = SqliteSaver(conn=conn)
+        saver.setup()
+        return saver
     if kind == "postgres":
         raise NotImplementedError(
             "TODO(student): implement Postgres checkpointer (optional extension)"
