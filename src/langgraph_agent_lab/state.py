@@ -6,9 +6,9 @@ Students should extend the schema only when needed. Keep state lean and serializ
 from __future__ import annotations
 
 from enum import StrEnum
+from operator import add
 from typing import Annotated, Any, TypedDict
 
-from operator import add
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -52,7 +52,11 @@ class AgentState(TypedDict, total=False):
     risk_level: str
     attempt: int
     max_attempts: int
+    evaluation_result: str
     final_answer: str | None
+    pending_question: str | None
+    proposed_action: str | None
+    approval: dict[str, Any] | None
     # TODO(student): you will need additional fields for clarification, risky actions,
     # approval decisions, and retry-loop gating. Add them as you implement nodes.
     # Hint: check what your nodes return and what your routing functions read.
@@ -60,6 +64,7 @@ class AgentState(TypedDict, total=False):
     tool_results: Annotated[list[str], add]
     errors: Annotated[list[str], add]
     events: Annotated[list[dict[str, Any]], add]
+    ai_log: Annotated[list[dict[str, Any]], add]
 
 
 class Scenario(BaseModel):
@@ -89,11 +94,16 @@ def initial_state(scenario: Scenario) -> AgentState:
         "risk_level": "unknown",
         "attempt": 0,
         "max_attempts": scenario.max_attempts,
+        "evaluation_result": "",
         "final_answer": None,
+        "pending_question": None,
+        "proposed_action": None,
+        "approval": None,
         "messages": [],
         "tool_results": [],
         "errors": [],
         "events": [],
+        "ai_log": [],
     }
 
 
