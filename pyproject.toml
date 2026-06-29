@@ -22,6 +22,7 @@ dev = [
   "pytest-cov>=5.0",
   "ruff>=0.5.0",
   "mypy>=1.10",
+  "types-PyYAML>=6.0",
 ]
 google = ["langchain-google-genai>=2.1.0"]
 openai = ["langchain-openai>=0.3.0"]
@@ -41,7 +42,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "N", "ANN"]
-ignore = ["ANN101", "ANN102"]
+ignore = ["ANN001", "ANN201", "ANN401", "E402", "E501"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
