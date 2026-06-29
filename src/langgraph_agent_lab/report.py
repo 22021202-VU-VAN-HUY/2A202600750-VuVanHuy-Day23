@@ -26,7 +26,8 @@ def render_report(metrics: MetricsReport) -> str:
 
 ## 1. Team / student
 
-- Name: Vu Van Huy
+- Name: Vũ Văn Huy
+- Student ID: 2A202600750
 - Repo/commit: local workspace
 - Date: {datetime.now(UTC).date().isoformat()}
 
@@ -96,6 +97,8 @@ The graph accepts a checkpointer at compile time. The default lab config uses `M
 
 - SQLite checkpointer support implemented in `persistence.py`.
 - AI usage log generated as `reports/ai_log.md` after scenario runs.
+- Grading question set added in `grading_questions.json` with 10 retrieval-oriented checks.
+- Offline unit tests cover routing, node behavior, report rendering, persistence options, and grading question schema.
 
 ## 8. Improvement plan
 
