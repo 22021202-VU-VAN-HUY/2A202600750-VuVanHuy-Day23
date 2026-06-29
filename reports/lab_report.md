@@ -2,7 +2,8 @@
 
 ## 1. Team / student
 
-- Name: Vu Van Huy
+- Name: Vũ Văn Huy
+- Student ID: 2A202600750
 - Repo/commit: local workspace
 - Date: 2026-06-29
 
@@ -53,6 +54,11 @@ Summary:
 | Total interrupts/approvals | 2 |
 | Resume success | False |
 
+Test evidence:
+
+- `.venv\Scripts\python.exe -m pytest`: 30 passed, 6 skipped.
+- `.venv\Scripts\python.exe -m ruff check .`: all checks passed.
+
 Per scenario:
 
 | Scenario | Expected route | Actual route | Success | Retries | Interrupts |
@@ -78,6 +84,8 @@ The graph accepts a checkpointer at compile time. The default lab config uses `M
 
 - SQLite checkpointer support implemented in `persistence.py`.
 - AI usage log generated as `reports/ai_log.md` after scenario runs.
+- Grading question set added in `grading_questions.json` with 10 retrieval-oriented checks across refund policy, P1 SLA, IT helpdesk, HR leave, and access-control SOP documents.
+- Additional offline test coverage added for routing-adjacent node behavior, retry/dead-letter flow, HITL approval, report rendering, and grading question schema validation.
 
 ## 8. Improvement plan
 
