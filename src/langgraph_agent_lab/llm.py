@@ -12,6 +12,23 @@ Usage in nodes:
 from __future__ import annotations
 
 import os
+from pathlib import Path
+
+
+def _load_env_file() -> None:
+    """Load simple KEY=VALUE pairs from .env without overriding shell variables."""
+    env_path = Path.cwd() / ".env"
+    if not env_path.exists():
+        return
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
 
 
 def get_llm(model: str | None = None, temperature: float = 0.0):
@@ -24,6 +41,8 @@ def get_llm(model: str | None = None, temperature: float = 0.0):
 
     Override model with the `model` parameter or LLM_MODEL env var.
     """
+    _load_env_file()
+
     if os.getenv("GEMINI_API_KEY"):
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
@@ -40,8 +59,9 @@ def get_llm(model: str | None = None, temperature: float = 0.0):
             from langchain_openai import ChatOpenAI
         except ImportError as exc:
             raise RuntimeError("Install: pip install langchain-openai") from exc
+        selected_model = model or os.getenv("LLM_MODEL") or "gpt-4o-mini"
         return ChatOpenAI(
-            model=model or os.getenv("LLM_MODEL", "gpt-4o-mini"),
+            model=selected_model,
             temperature=temperature,
         )
 
@@ -50,9 +70,12 @@ def get_llm(model: str | None = None, temperature: float = 0.0):
             from langchain_anthropic import ChatAnthropic
         except ImportError as exc:
             raise RuntimeError("Install: pip install langchain-anthropic") from exc
+        selected_model = model or os.getenv("LLM_MODEL") or "claude-sonnet-4-20250514"
         return ChatAnthropic(
-            model=model or os.getenv("LLM_MODEL", "claude-sonnet-4-20250514"),
+            model_name=selected_model,
             temperature=temperature,
+            timeout=None,
+            stop=None,
         )
 
     raise RuntimeError(
